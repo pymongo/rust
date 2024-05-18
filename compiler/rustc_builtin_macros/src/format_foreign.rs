@@ -421,7 +421,7 @@ pub(crate) mod printf {
                             state = Prec;
                             parameter = None;
                             flags = "";
-                            width = at.slice_between(end).map(|num| Num::from_str(num, None));
+                            width = at.slice_between(end).and_then(|num| Num::from_str(num, None));
                             if width.is_none() {
                                 return fallback();
                             }
@@ -455,7 +455,7 @@ pub(crate) mod printf {
                 '1'..='9' => {
                     let end = at_next_cp_while(next, char::is_ascii_digit);
                     state = Prec;
-                    width = at.slice_between(end).map(|num| Num::from_str(num, None));
+                    width = at.slice_between(end).and_then(|num| Num::from_str(num, None));
                     if width.is_none() {
                         return fallback();
                     }
@@ -519,7 +519,7 @@ pub(crate) mod printf {
                 '0'..='9' => {
                     let end = at_next_cp_while(next, char::is_ascii_digit);
                     state = Length;
-                    precision = at.slice_between(end).map(|num| Num::from_str(num, None));
+                    precision = at.slice_between(end).and_then(|num| Num::from_str(num, None));
                     move_to!(end);
                 }
                 _ => return fallback(),
